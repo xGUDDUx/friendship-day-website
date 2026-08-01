@@ -1,31 +1,46 @@
+import { useEffect, useState } from "react";
+
 export default function Letter() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const resize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", resize);
+
+    return () => window.removeEventListener("resize", resize);
+  }, []);
+
   return (
     <section
       id="letter"
       style={{
-        padding: "120px 60px",
-        color: "white",
+        padding: isMobile ? "90px 20px" : "120px 60px",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        color: "white",
       }}
     >
       <div
         style={{
+          width: "100%",
           maxWidth: "900px",
           background: "rgba(255,255,255,0.08)",
           backdropFilter: "blur(20px)",
           border: "1px solid rgba(255,255,255,0.1)",
           borderRadius: "30px",
-          padding: "50px",
-          boxShadow: "0 0 40px rgba(139,92,246,0.25)",
+          padding: isMobile ? "30px" : "50px",
+          boxShadow: "0 0 35px rgba(139,92,246,.35)",
         }}
       >
         <h2
           style={{
-            fontSize: "60px",
             textAlign: "center",
-            marginBottom: "40px",
+            fontSize: isMobile ? "36px" : "60px",
+            marginBottom: "35px",
             textShadow: "0 0 20px #8b5cf6",
           }}
         >
@@ -34,7 +49,7 @@ export default function Letter() {
 
         <p
           style={{
-            fontSize: "22px",
+            fontSize: isMobile ? "18px" : "22px",
             lineHeight: "2",
             color: "#dddddd",
             textAlign: "justify",
@@ -43,23 +58,37 @@ export default function Letter() {
           Dear Best Friend,
           <br />
           <br />
-          Thank you for always being there for me through every happy moment
-          and every difficult day.
+
+          Thank you for always standing beside me through every smile,
+          every challenge, and every unforgettable memory.
+
           <br />
           <br />
-          Your support, kindness, and laughter have made my life brighter.
-          Every memory we created together will always have a special place in
-          my heart.
+
+          You have made my life brighter with your kindness,
+          support and endless laughter.
+
           <br />
           <br />
-          I hope our friendship stays strong forever, no matter where life
-          takes us.
+
+          Every memory we've shared is a treasure that I will always
+          carry with me.
+
           <br />
           <br />
+
+          No matter where life takes us, I know our friendship will
+          always remain strong.
+
+          <br />
+          <br />
+
           ❤️ Happy Friendship Day ❤️
+
           <br />
           <br />
-          — Your Friend
+
+          <strong>— Your Best Friend ❤️</strong>
         </p>
       </div>
     </section>

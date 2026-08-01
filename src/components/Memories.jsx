@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import friend1 from "../assets/friend1.jpg";
 import friend2 from "../assets/friend2.jpg";
@@ -27,19 +27,31 @@ const memories = [
 export default function Memories() {
   const [selectedImage, setSelectedImage] = useState(null);
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const resize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", resize);
+
+    return () => window.removeEventListener("resize", resize);
+  }, []);
+
   return (
     <section
       id="memories"
       style={{
-        padding: "170px 60px 120px",
+        padding: isMobile ? "90px 20px" : "120px 60px",
         color: "white",
       }}
     >
       <h2
         style={{
           textAlign: "center",
-          fontSize: "65px",
-          marginBottom: "60px",
+          fontSize: isMobile ? "40px" : "65px",
+          marginBottom: "50px",
           textShadow: "0 0 20px #8b5cf6",
         }}
       >
@@ -49,7 +61,9 @@ export default function Memories() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit,minmax(270px,1fr))",
+          gridTemplateColumns: isMobile
+            ? "1fr"
+            : "repeat(auto-fit,minmax(270px,1fr))",
           gap: "30px",
         }}
       >
@@ -60,22 +74,20 @@ export default function Memories() {
             style={{
               background: "rgba(255,255,255,.08)",
               backdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,.1)",
               borderRadius: "25px",
               overflow: "hidden",
               cursor: "pointer",
               transition: ".35s",
-              boxShadow: "0 10px 25px rgba(0,0,0,.35)",
+              border: "1px solid rgba(255,255,255,.1)",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-10px)";
+              e.currentTarget.style.transform = "translateY(-8px)";
               e.currentTarget.style.boxShadow =
-                "0 0 35px rgba(168,85,247,.7)";
+                "0 0 30px rgba(168,85,247,.7)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow =
-                "0 10px 25px rgba(0,0,0,.35)";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
             <img
@@ -83,23 +95,21 @@ export default function Memories() {
               alt={item.title}
               style={{
                 width: "100%",
-                height: "260px",
+                height: isMobile ? "300px" : "260px",
                 objectFit: "cover",
-                transition: ".4s",
               }}
             />
 
             <div
               style={{
-                padding: "22px",
+                padding: "20px",
                 textAlign: "center",
               }}
             >
               <h3
                 style={{
                   margin: 0,
-                  fontSize: "30px",
-                  fontWeight: "bold",
+                  fontSize: isMobile ? "28px" : "32px",
                 }}
               >
                 {item.title}
@@ -116,23 +126,22 @@ export default function Memories() {
             position: "fixed",
             inset: 0,
             background: "rgba(0,0,0,.92)",
-            backdropFilter: "blur(8px)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             zIndex: 99999,
-            cursor: "pointer",
+            backdropFilter: "blur(8px)",
           }}
         >
           <img
             src={selectedImage}
             alt=""
             style={{
-              width: "80%",
+              width: isMobile ? "92%" : "80%",
               maxWidth: "900px",
               maxHeight: "90vh",
-              borderRadius: "25px",
-              boxShadow: "0 0 50px #8b5cf6",
+              borderRadius: "20px",
+              boxShadow: "0 0 40px #8b5cf6",
             }}
           />
 
@@ -140,15 +149,15 @@ export default function Memories() {
             onClick={() => setSelectedImage(null)}
             style={{
               position: "absolute",
-              top: "30px",
-              right: "40px",
-              width: "55px",
-              height: "55px",
+              top: "20px",
+              right: "20px",
+              width: "50px",
+              height: "50px",
               borderRadius: "50%",
               border: "none",
               background: "#8b5cf6",
               color: "white",
-              fontSize: "28px",
+              fontSize: "24px",
               cursor: "pointer",
             }}
           >

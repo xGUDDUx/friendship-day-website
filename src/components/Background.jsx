@@ -1,64 +1,100 @@
+import { useEffect } from "react";
+
 export default function Background() {
+  useEffect(() => {
+    const style = document.createElement("style");
+
+    style.innerHTML = `
+      @keyframes aurora1 {
+        0% { transform: translate(-10%, -10%) rotate(0deg); }
+        50% { transform: translate(10%, 10%) rotate(180deg); }
+        100% { transform: translate(-10%, -10%) rotate(360deg); }
+      }
+
+      @keyframes aurora2 {
+        0% { transform: translate(10%, -10%) rotate(0deg); }
+        50% { transform: translate(-10%, 10%) rotate(180deg); }
+        100% { transform: translate(10%, -10%) rotate(360deg); }
+      }
+
+      @keyframes aurora3 {
+        0% { transform: translate(-5%, 5%) rotate(0deg); }
+        50% { transform: translate(5%, -5%) rotate(180deg); }
+        100% { transform: translate(-5%, 5%) rotate(360deg); }
+      }
+    `;
+
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
-    <>
-      {/* Main Background */}
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        overflow: "hidden",
+        zIndex: -2,
+        background:
+          "linear-gradient(180deg,#05010d,#120022,#19002f,#090014)",
+      }}
+    >
       <div
         style={{
-          position: "fixed",
+          position: "absolute",
+          width: "900px",
+          height: "900px",
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(168,85,247,0.45), transparent 70%)",
+          filter: "blur(80px)",
+          top: "-300px",
+          left: "-250px",
+          animation: "aurora1 25s linear infinite",
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          width: "900px",
+          height: "900px",
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(59,130,246,0.35), transparent 70%)",
+          filter: "blur(80px)",
+          bottom: "-350px",
+          right: "-250px",
+          animation: "aurora2 30s linear infinite",
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          width: "700px",
+          height: "700px",
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(236,72,153,0.25), transparent 70%)",
+          filter: "blur(70px)",
+          top: "35%",
+          left: "35%",
+          animation: "aurora3 22s linear infinite",
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(180deg, #120021 0%, #090014 50%, #05000d 100%)",
-          zIndex: -5,
+            "radial-gradient(circle at center, transparent, rgba(0,0,0,.35))",
         }}
       />
-
-      {/* Purple Glow */}
-      <div
-        style={{
-          position: "fixed",
-          width: "550px",
-          height: "550px",
-          background: "#8b5cf6",
-          borderRadius: "50%",
-          filter: "blur(180px)",
-          top: "-180px",
-          left: "-180px",
-          opacity: "0.45",
-          zIndex: -4,
-        }}
-      />
-
-      {/* Pink Glow */}
-      <div
-        style={{
-          position: "fixed",
-          width: "500px",
-          height: "500px",
-          background: "#ec4899",
-          borderRadius: "50%",
-          filter: "blur(180px)",
-          bottom: "-180px",
-          right: "-180px",
-          opacity: "0.35",
-          zIndex: -4,
-        }}
-      />
-
-      {/* Blue Glow */}
-      <div
-        style={{
-          position: "fixed",
-          width: "350px",
-          height: "350px",
-          background: "#3b82f6",
-          borderRadius: "50%",
-          filter: "blur(150px)",
-          top: "40%",
-          left: "40%",
-          opacity: "0.15",
-          zIndex: -4,
-        }}
-      />
-    </>
+    </div>
   );
 }

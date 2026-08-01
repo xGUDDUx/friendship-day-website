@@ -1,34 +1,79 @@
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+
 export default function Hero() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  const fullText = "❤️ Happy Friendship Day ❤️";
+  const [displayText, setDisplayText] = useState("");
+
+  useEffect(() => {
+    const resize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", resize);
+
+    return () => window.removeEventListener("resize", resize);
+  }, []);
+
+  useEffect(() => {
+    let index = 0;
+
+    const interval = setInterval(() => {
+      setDisplayText(fullText.slice(0, index + 1));
+      index++;
+
+      if (index >= fullText.length) {
+        clearInterval(interval);
+      }
+    }, 90);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const scrollToMemories = () => {
     const target = document.getElementById("memories");
 
     if (!target) return;
 
-    const start = window.pageYOffset;
-    const end = target.offsetTop;
-    const distance = end - start;
-    const duration = 1500; // 1.5 seconds
+    const startPosition = window.pageYOffset;
 
-    let startTime = null;
+    const targetPosition =
+      target.getBoundingClientRect().top +
+      window.pageYOffset -
+      80;
 
-    function easeInOutQuad(t) {
+    const distance = targetPosition - startPosition;
+
+    const duration = 1800;
+
+    let start = null;
+
+    function easeInOutCubic(t) {
       return t < 0.5
-        ? 2 * t * t
-        : -1 + (4 - 2 * t) * t;
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
 
     function animation(currentTime) {
-      if (!startTime) startTime = currentTime;
+      if (!start) start = currentTime;
 
-      const timeElapsed = currentTime - startTime;
-      const progress = Math.min(timeElapsed / duration, 1);
+      const elapsed = currentTime - start;
+
+      const progress = Math.min(
+        elapsed / duration,
+        1
+      );
 
       window.scrollTo(
         0,
-        start + distance * easeInOutQuad(progress)
+        startPosition +
+          distance *
+            easeInOutCubic(progress)
       );
 
-      if (timeElapsed < duration) {
+      if (progress < 1) {
         requestAnimationFrame(animation);
       }
     }
@@ -47,27 +92,59 @@ export default function Hero() {
         flexDirection: "column",
         textAlign: "center",
         color: "white",
-        padding: "20px",
+        padding: isMobile ? "20px" : "40px",
       }}
     >
-      <h1
+      <motion.h1
+        initial={{ opacity: 0, y: -100 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 1,
+        }}
         style={{
-          fontSize: "72px",
-          marginBottom: "20px",
+          fontSize: isMobile
+            ? "42px"
+            : "72px",
           fontWeight: "bold",
-          textShadow: "0 0 20px #8b5cf6",
+          marginBottom: "20px",
+          textShadow:
+            "0 0 30px #8b5cf6",
         }}
       >
-        ❤️ Happy Friendship Day ❤️
-      </h1>
+        {displayText}
 
-      <p
+        <span
+          style={{
+            animation:
+              "blink 1s infinite",
+            color: "#a855f7",
+          }}
+        >
+          |
+        </span>
+      </motion.h1>
+
+      <motion.p
+        initial={{
+          opacity: 0,
+          y: 80,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 1,
+          delay: 0.4,
+        }}
         style={{
-          fontSize: "24px",
-          color: "#d8d8d8",
+          fontSize: isMobile
+            ? "18px"
+            : "24px",
           maxWidth: "700px",
-          lineHeight: "1.7",
-          marginBottom: "40px",
+          lineHeight: "1.8",
+          color: "#d8d8d8",
+          marginBottom: "45px",
         }}
       >
         Every memory with you is priceless.
@@ -75,44 +152,69 @@ export default function Hero() {
         Thank you for always being there.
         <br />
         Friends Forever 💜
-      </p>
-
-      <button
+      </motion.p>
+            <motion.button
+        initial={{
+          opacity: 0,
+          scale: 0.5,
+        }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+        }}
+        transition={{
+          duration: 0.8,
+          delay: 0.8,
+        }}
+        whileHover={{
+          scale: 1.08,
+          boxShadow: "0 0 45px #a855f7",
+        }}
+        whileTap={{
+          scale: 0.95,
+        }}
         onClick={scrollToMemories}
         style={{
-          padding: "18px 55px",
-          fontSize: "22px",
+          padding: isMobile
+            ? "16px 35px"
+            : "18px 55px",
+          fontSize: isMobile
+            ? "18px"
+            : "22px",
           fontWeight: "bold",
-          background: "linear-gradient(135deg,#7c3aed,#a855f7)",
           color: "white",
           border: "none",
           borderRadius: "50px",
           cursor: "pointer",
-          boxShadow: "0 0 30px #8b5cf6",
-          transition: "all .4s ease",
-        }}
-        onMouseEnter={(e) => {
-          e.target.style.transform = "scale(1.08)";
-          e.target.style.boxShadow = "0 0 50px #a855f7";
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.transform = "scale(1)";
-          e.target.style.boxShadow = "0 0 30px #8b5cf6";
+          background:
+            "linear-gradient(135deg,#7c3aed,#a855f7)",
+          boxShadow:
+            "0 0 30px #8b5cf6",
         }}
       >
         Explore ❤️
-      </button>
+      </motion.button>
 
-      <p
+      <motion.p
+        initial={{
+          opacity: 0,
+        }}
+        animate={{
+          opacity: 0.7,
+        }}
+        transition={{
+          duration: 2,
+          delay: 1.5,
+        }}
         style={{
-          marginTop: "80px",
-          opacity: "0.6",
-          fontSize: "18px",
-          animation: "bounce 2s infinite",
+          marginTop: "70px",
+          fontSize: isMobile
+            ? "15px"
+            : "18px",
         }}
       >
         ↓ Scroll Down ↓
-      </p>
+      </motion.p>
     </section>
   );
 }

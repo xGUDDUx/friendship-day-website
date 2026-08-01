@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [showNavbar, setShowNavbar] = useState(true);
 
   useEffect(() => {
+    let lastScroll = window.scrollY;
+
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
 
@@ -13,9 +16,25 @@ export default function Navbar() {
       }
     };
 
-    window.addEventListener("resize", handleResize);
+    const handleScroll = () => {
+      const currentScroll = window.scrollY;
 
-    return () => window.removeEventListener("resize", handleResize);
+      if (currentScroll > lastScroll && currentScroll > 100) {
+        setShowNavbar(false);
+      } else {
+        setShowNavbar(true);
+      }
+
+      lastScroll = currentScroll;
+    };
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const navLinkStyle = {
@@ -32,7 +51,10 @@ export default function Navbar() {
         position: "fixed",
         top: "20px",
         left: "50%",
-        transform: "translateX(-50%)",
+        transform: showNavbar
+          ? "translate(-50%, 0)"
+          : "translate(-50%, -150%)",
+        transition: "transform 0.4s ease",
         width: isMobile ? "92%" : "80%",
         padding: "18px 30px",
         borderRadius: "30px",
@@ -85,19 +107,35 @@ export default function Navbar() {
                 textAlign: "center",
               }}
             >
-              <a href="#home" style={navLinkStyle} onClick={() => setMenuOpen(false)}>
+              <a
+                href="#home"
+                style={navLinkStyle}
+                onClick={() => setMenuOpen(false)}
+              >
                 Home
               </a>
 
-              <a href="#memories" style={navLinkStyle} onClick={() => setMenuOpen(false)}>
+              <a
+                href="#memories"
+                style={navLinkStyle}
+                onClick={() => setMenuOpen(false)}
+              >
                 Memories
               </a>
 
-              <a href="#gallery" style={navLinkStyle} onClick={() => setMenuOpen(false)}>
+              <a
+                href="#gallery"
+                style={navLinkStyle}
+                onClick={() => setMenuOpen(false)}
+              >
                 Gallery
               </a>
 
-              <a href="#letter" style={navLinkStyle} onClick={() => setMenuOpen(false)}>
+              <a
+                href="#letter"
+                style={navLinkStyle}
+                onClick={() => setMenuOpen(false)}
+              >
                 Letter
               </a>
             </div>
